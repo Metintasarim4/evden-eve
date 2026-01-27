@@ -1,9 +1,8 @@
+"use client";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Building2, ArrowRight, Home, Lift, Users } from "lucide-react";
-
-const ILLER = ["İstanbul", "Ankara", "İzmir", "Bursa", "Antalya", "Adana", "Konya", "Gaziantep", "Kayseri", "Mersin", "Eskişehir", "Samsun", "Trabzon", "Erzurum", "Diyarbakır", "Şanlıurfa", "Tekirdağ", "Hatay", "Manisa", "Balıkesir"];
-const ILCE = ["Merkez", "Çankaya", "Kadıköy", "Keçiören", "Osmangazi", "Yıldırım", "Küçükçekmece", "Bağcılar", "Bornova", "Karşıyaka"];
+import { Building2, ArrowRight, Home, Truck, Users } from "lucide-react";
+import { locations } from "../data/locations";
 const ODA = ["1+1", "2+1", "3+1", "4+1", "5+1+"];
 const KAT = ["Giriş", "1. Kat", "2. Kat", "3. Kat", "4. Kat", "5. Kat+"];
 
@@ -22,8 +21,10 @@ const PriceCalculator = () => {
   const [step, setStep] = useState(0);
   const [fromIl, setFromIl] = useState("");
   const [fromIlce, setFromIlce] = useState("");
+  const [fromMahalle, setFromMahalle] = useState("");
   const [toIl, setToIl] = useState("");
   const [toIlce, setToIlce] = useState("");
+  const [toMahalle, setToMahalle] = useState("");
   const [oda, setOda] = useState(ODA[0]);
   const [kat, setKat] = useState(KAT[0]);
   const [asansor, setAsansor] = useState(true);
@@ -47,29 +48,55 @@ const PriceCalculator = () => {
         {step === 0 && (
           <div>
             <label className="block mb-2 font-medium">Nereden (İl)</label>
-            <select className="w-full p-2 border rounded" value={fromIl} onChange={e => setFromIl(e.target.value)}>
+            <select className="w-full p-2 border rounded" value={fromIl} onChange={e => {setFromIl(e.target.value); setFromIlce(""); setFromMahalle("");}}>
               <option value="">Seçiniz</option>
-              {ILLER.map(il => <option key={il} value={il}>{il}</option>)}
+              {locations.map(il => <option key={il.il} value={il.il}>{il.ad}</option>)}
             </select>
-            <label className="block mt-4 mb-2 font-medium">Nereden (İlçe)</label>
-            <select className="w-full p-2 border rounded" value={fromIlce} onChange={e => setFromIlce(e.target.value)}>
-              <option value="">Seçiniz</option>
-              {ILCE.map(ilce => <option key={ilce} value={ilce}>{ilce}</option>)}
-            </select>
+            {fromIl && (
+              <>
+                <label className="block mt-4 mb-2 font-medium">Nereden (İlçe)</label>
+                <select className="w-full p-2 border rounded" value={fromIlce} onChange={e => {setFromIlce(e.target.value); setFromMahalle("");}}>
+                  <option value="">Seçiniz</option>
+                  {locations.find(il => il.il === fromIl)?.ilceler.map(ilce => <option key={ilce.ilce} value={ilce.ilce}>{ilce.ad}</option>)}
+                </select>
+              </>
+            )}
+            {fromIlce && (
+              <>
+                <label className="block mt-4 mb-2 font-medium">Nereden (Mahalle)</label>
+                <select className="w-full p-2 border rounded" value={fromMahalle} onChange={e => setFromMahalle(e.target.value)}>
+                  <option value="">Seçiniz</option>
+                  {locations.find(il => il.il === fromIl)?.ilceler.find(i => i.ilce === fromIlce)?.mahalleler.map(m => <option key={m} value={m}>{m}</option>)}
+                </select>
+              </>
+            )}
           </div>
         )}
         {step === 1 && (
           <div>
             <label className="block mb-2 font-medium">Nereye (İl)</label>
-            <select className="w-full p-2 border rounded" value={toIl} onChange={e => setToIl(e.target.value)}>
+            <select className="w-full p-2 border rounded" value={toIl} onChange={e => {setToIl(e.target.value); setToIlce(""); setToMahalle("");}}>
               <option value="">Seçiniz</option>
-              {ILLER.map(il => <option key={il} value={il}>{il}</option>)}
+              {locations.map(il => <option key={il.il} value={il.il}>{il.ad}</option>)}
             </select>
-            <label className="block mt-4 mb-2 font-medium">Nereye (İlçe)</label>
-            <select className="w-full p-2 border rounded" value={toIlce} onChange={e => setToIlce(e.target.value)}>
-              <option value="">Seçiniz</option>
-              {ILCE.map(ilce => <option key={ilce} value={ilce}>{ilce}</option>)}
-            </select>
+            {toIl && (
+              <>
+                <label className="block mt-4 mb-2 font-medium">Nereye (İlçe)</label>
+                <select className="w-full p-2 border rounded" value={toIlce} onChange={e => {setToIlce(e.target.value); setToMahalle("");}}>
+                  <option value="">Seçiniz</option>
+                  {locations.find(il => il.il === toIl)?.ilceler.map(ilce => <option key={ilce.ilce} value={ilce.ilce}>{ilce.ad}</option>)}
+                </select>
+              </>
+            )}
+            {toIlce && (
+              <>
+                <label className="block mt-4 mb-2 font-medium">Nereye (Mahalle)</label>
+                <select className="w-full p-2 border rounded" value={toMahalle} onChange={e => setToMahalle(e.target.value)}>
+                  <option value="">Seçiniz</option>
+                  {locations.find(il => il.il === toIl)?.ilceler.find(i => i.ilce === toIlce)?.mahalleler.map(m => <option key={m} value={m}>{m}</option>)}
+                </select>
+              </>
+            )}
             <label className="block mt-4 mb-2 font-medium">Tahmini Mesafe (km)</label>
             <input type="number" className="w-full p-2 border rounded" value={mesafe} min={1} max={2000} onChange={e => setMesafe(Number(e.target.value))} />
           </div>
@@ -90,8 +117,8 @@ const PriceCalculator = () => {
             </select>
             <label className="block mt-4 mb-2 font-medium">Asansör Var mı?</label>
             <div className="flex gap-4">
-              <button className={`px-4 py-2 rounded ${asansor ? "bg-blue-600 text-white" : "bg-gray-200"}`} onClick={() => setAsansor(true)}><Lift size={18}/> Evet</button>
-              <button className={`px-4 py-2 rounded ${!asansor ? "bg-blue-600 text-white" : "bg-gray-200"}`} onClick={() => setAsansor(false)}><Lift size={18}/> Hayır</button>
+              <button className={`px-4 py-2 rounded ${asansor ? "bg-blue-600 text-white" : "bg-gray-200"}`} onClick={() => setAsansor(true)}><Truck size={18}/> Evet</button>
+              <button className={`px-4 py-2 rounded ${!asansor ? "bg-blue-600 text-white" : "bg-gray-200"}`} onClick={() => setAsansor(false)}><Truck size={18}/> Hayır</button>
             </div>
           </div>
         )}
