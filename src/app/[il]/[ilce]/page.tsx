@@ -2,8 +2,8 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 
-import { locations } from "../../data/locations";
-import PriceCalculator from "../../components/PriceCalculator";
+import { locations } from "@/data/locations";
+import PriceCalculator from "@/components/PriceCalculator";
 
 export async function generateMetadata({ params }: { params: { il: string; ilce: string; mahalle?: string } }): Promise<Metadata> {
   const { il, ilce, mahalle } = params;
