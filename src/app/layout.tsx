@@ -1,52 +1,79 @@
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
 import "./globals.css";
-import type { ReactNode } from "react";
+import Link from "next/link";
 
-export const metadata = {
-  title: "Metin Nakliyat - Türkiye'nin 81 İlinde Güvenli Taşımacılık",
-  description: "Evden eve nakliyat, sigortalı taşımacılık ve uygun fiyatlarla Türkiye'nin her yerinde hizmet."
+const inter = Inter({ subsets: ["latin"] });
+
+export const metadata: Metadata = {
+  title: "Metin Nakliyat - Güvenli ve Sigortalı Taşımacılık",
+  description: "Türkiye'nin 81 iline asansörlü, sigortalı evden eve nakliyat hizmeti. Hemen fiyat teklifi alın.",
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
     <html lang="tr">
-      <head>
-        <link rel="stylesheet" href="/output.css" />
-      </head>
-      <body className="bg-gray-50 text-gray-900">
-        {/* Header */}
-        <header className="bg-white shadow py-4 px-6 flex flex-col md:flex-row justify-between items-center gap-2 md:gap-0">
-          <div className="flex items-center gap-3">
-            <img src="/logo.png" alt="Metin Nakliyat" className="h-10" />
-            <span className="font-bold text-2xl text-blue-700">Metin Nakliyat</span>
-          </div>
-          <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-6">
-            <span className="text-sm text-gray-600">Başakşehir, İstanbul</span>
-            <a href="#hizmetler" className="text-blue-700 font-medium hover:underline">Hizmetler</a>
-            <a href="https://wa.me/905432107058" target="_blank" rel="noopener" className="bg-green-500 text-white px-4 py-2 rounded-lg font-bold shadow hover:bg-green-600 transition">WhatsApp: 0543 210 70 58</a>
-          </div>
-        </header>
-        {/* Main Content */}
-        <main>{children}</main>
-        {/* Footer */}
-        <footer className="bg-blue-900 text-white py-10 mt-16">
-          <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-6">
-            {/* SEO Footer Links - Tüm iller ve ilçeler */}
-            {require("../data/locations").locations.map(il => (
-              <div key={il.il}>
-                <a href={`/${il.il}/merkez`} className="font-bold hover:underline">{il.ad} Nakliyat</a>
-                <ul className="mt-2 text-sm">
-                  {il.ilceler.map(ilce => (
-                    <li key={ilce.ilce}><a href={`/${il.il}/${ilce.ilce}`} className="hover:underline">{ilce.ad}</a></li>
-                  ))}
-                </ul>
+      <body className={inter.className}>
+        
+        {/* Sayfa İçeriği Buraya Gelecek */}
+        {children}
+
+        {/* --- GLOBAL FOOTER --- */}
+        <footer className="bg-gray-900 text-white py-12 mt-auto border-t border-gray-800 relative z-50">
+          <div className="container mx-auto px-4">
+            
+            <div className="flex flex-col md:flex-row justify-between items-center gap-8 mb-10">
+              
+              {/* Sol Taraf: Marka ve Açıklama */}
+              <div className="text-center md:text-left max-w-xl">
+                 <div className="text-3xl font-bold text-white mb-4">
+                    METİN <span className="text-orange-600">NAKLİYAT</span>
+                </div>
+                <p className="text-gray-400 text-sm leading-relaxed mb-6">
+                  1996 yılından beri sektörün lideri. Geniş araç filomuz, tecrübeli personelimiz ve "Sıfır Hasar" prensibimizle eşyalarınızı Türkiye'nin her yerine güvenle taşıyoruz.
+                </p>
+                <div className="flex justify-center md:justify-start gap-4 text-sm font-bold text-gray-500">
+                    <span className="flex items-center gap-1">🛡️ Sigortalı</span>
+                    <span className="flex items-center gap-1">🚛 Asansörlü</span>
+                    <span className="flex items-center gap-1">🤝 Sözleşmeli</span>
+                </div>
               </div>
-            ))}
-          </div>
-          <div className="text-center mt-8 text-xs">
-            <div>İletişim: Başakşehir, İstanbul | WhatsApp: <a href="https://wa.me/905432107058" className="underline">0543 210 70 58</a></div>
-            © 2026 Metin Nakliyat. Tüm hakları saklıdır.
+
+              {/* Sağ Taraf: Hızlı Linkler */}
+              <div className="flex gap-8 text-sm font-medium">
+                  <Link href="/" className="hover:text-orange-500 transition">Ana Sayfa</Link>
+                  <Link href="/hizmetler" className="hover:text-orange-500 transition">Hizmetler</Link>
+                  <Link href="/bolge" className="hover:text-orange-500 transition">Hizmet Bölgeleri</Link>
+                  <Link href="/iletisim" className="hover:text-orange-500 transition">İletişim</Link>
+              </div>
+
+            </div>
+
+            {/* Alt Telif Hakkı ve İMZA Kısmı */}
+            <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-500">
+              
+              <div className="flex flex-col md:flex-row items-center gap-2">
+                  <p>&copy; {new Date().getFullYear()} Metin Nakliyat. Tüm hakları saklıdır.</p>
+                  <span className="hidden md:block text-gray-700">|</span>
+                  {/* İMZA BURADA */}
+                  <p>
+                    Bu Site <strong className="text-gray-300 hover:text-orange-500 transition cursor-pointer">Metin Tasarım</strong> Tarafından Yapılmıştır
+                  </p>
+              </div>
+
+              <div className="flex gap-4">
+                  <span className="cursor-pointer hover:text-white">Gizlilik Politikası</span>
+                  <span className="cursor-pointer hover:text-white">Kullanım Şartları</span>
+              </div>
+            </div>
+
           </div>
         </footer>
+
       </body>
     </html>
   );
